@@ -1,0 +1,117 @@
+<tool id="msstitch_qc" name="msstitch QC" version="1.0">
+    <description>after search</description>
+    <requirements>
+        <requirement type="package" version="3.6">python</requirement>
+        <requirement type="package">r-ggplot2</requirement>
+        <requirement type="package">r-venndiagram</requirement>
+        <requirement type="package">sqlite</requirement>
+    </requirements>
+    <stdio>
+        <exit_code range="1:"/>
+    </stdio>
+    <command>
+            <![CDATA[
+	    sqlite3 '$lookup' "SELECT set_name, mzmlfilename, COUNT(*) FROM mzml JOIN mzmlfiles USING(mzmlfile_id) JOIN biosets USING(set_id) GROUP BY mzmlfilename" > amount_spectra_files
+            &&
+	    python $__tool_directory__/preprocess_psms.py $psmtable mcpsms.txt 11 amount_spectra_files $platepatterns
+	    &&
+	    Rscript $__tool_directory__/qcpsms.R $__tool_directory__/multiplot.R mcpsms.txt  amount_spectra_plates $setnames
+
+            #set $pdfs = ['psms.pdf']  
+	    #set $fieldnames = ['.*area', '.*q-val']
+	    #if $isobaric
+	    #silent $fieldnames.append('.*plex')
+	    #end if
+
+	    #if $peptides
+            &&
+	    python $__tool_directory__/rebuild_set_table.py -t '$peptides' -o qcpeptides.txt -i 1 6 -s $setnames
+	    -f 
+	    #for $field in $fieldnames
+	    '$field'
+	    #end for
+            &&
+	    Rscript $__tool_directory__/qcproteins.R $__tool_directory__/multiplot.R qcpeptides.txt peptides $isobaric $setnames
+            #silent $pdfs.extend(['peptides.pdf', 'venn_peptides.png'])
+	    #end if
+
+	    #if $proteins
+            &&
+	    python $__tool_directory__/rebuild_set_table.py -t '$proteins' -o qcproteins.txt -i 1 5 -s $setnames
+	    -f 
+	    #for $field in $fieldnames
+	    '$field'
+	    #end for
+            &&
+	    Rscript $__tool_directory__/qcproteins.R $__tool_directory__/multiplot.R qcproteins.txt proteins $isobaric $setnames
+            #silent $pdfs.extend(['proteins.pdf', 'venn_proteins.png'])
+	    #end if
+	    
+	    #if $genes 
+            &&
+	    python $__tool_directory__/rebuild_set_table.py -t '$genes' -o qcgenes.txt -i 1 -s $setnames
+	    -f 
+	    #for $field in $fieldnames
+	    '$field'
+	    #end for
+            &&
+	    Rscript $__tool_directory__/qcproteins.R $__tool_directory__/multiplot.R qcgenes.txt genes $isobaric $setnames
+            #silent $pdfs.extend(['genes.pdf', 'venn_genes.png'])
+	    #end if
+
+	    #if $symbols 
+            &&
+	    python $__tool_directory__/rebuild_set_table.py -t '$symbols' -o qcsymbols.txt -i 1 -s $setnames
+	    -f 
+	    #for $field in $fieldnames
+	    '$field'
+	    #end for
+            &&
+	    Rscript $__tool_directory__/qcproteins.R $__tool_directory__/multiplot.R qcsymbols.txt symbols $isobaric $setnames
+            #silent $pdfs.extend(['symbols.pdf', 'venn_symbols.png'])
+	    #end if
+
+            &&
+            tar -czf $output 
+            #for $pdf in $pdfs
+            $pdf
+            #end for
+
+            ]]>
+    </command>
+    <inputs>
+	    <param name="psmtable" type="data" format="tabular" label="PSM table" />
+	    <param name="lookup" type="data" format="sqlite" label="Lookup with spectra" />
+	    <param name="peptides" type="data" format="tabular" label="Peptide table"  />
+	    <param name="proteins" type="data" format="tabular" label="Protein table" optional="true" />
+	    <param name="genes" type="data" format="tabular" label="Gene table" optional="true" />
+	    <param name="symbols" type="data" format="tabular" label="Symbol table" optional="true" />
+            <param name="setnames" type="text" label="Setnames" />
+            <param name="platepatterns" type="text" label="Platepatterns if HiRIEF" />
+            <param name="isobaric" type="select" label="Isobaric data?" >
+                <option value="true">Yes</option>
+                <option value="false">No</option>
+            </param>
+    </inputs> 
+    <outputs>
+        <data format="data" name="output"/>
+    </outputs>
+    <tests>
+	    <test>
+		    <param name="psmtable" value="psmtable.txt" />
+		    <param name="lookup" value="lookup.sql" />
+		    <param name="proteins" value="proteins.txt" />
+		    <param name="peptides" value="peptides.txt" />
+		    <param name="genes" value="genes.txt" />
+		    <param name="symbols" value="symbols.txt" />
+		    <param name="setnames" value="WC" />
+		    <param name="platepatterns" value="IEF_3-10" />
+		    <param name="isobaric" value="true" />
+		    <output name="output" value="pdfs.tar.gz" compare="sim_size" />
+	    </test>
+    </tests>
+    <help>
+	    Creates a peptide table from PSM table. It is optional to add 
+	    isobaric quant, precursor quant, probabilities.
+    </help>
+</tool>

@@ -19,7 +19,7 @@ wideproteins = dcast(proteins, Accession~Set, sum)
 if (length(wideproteins) < 7) {
   setlist = list()
   for (setname in names(wideproteins[2:length(wideproteins)])) {
-    setprots = wideproteins$Accession[!is.na(wideproteins[setname])]
+    setprots = wideproteins$Accession[complete.cases(wideproteins[,c(setname, 'Accession')])]
     setlist[[setname]] = setprots
   }
   venn.diagram(x=setlist, filename=sprintf("venn_%s.png", args[2]), imagetype='png')

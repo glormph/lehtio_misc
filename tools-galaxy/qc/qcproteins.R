@@ -22,13 +22,13 @@ if (length(wideproteins) < 7) {
     setprots = wideproteins$Accession[complete.cases(wideproteins[,c(setname, 'Accession')])]
     setlist[[setname]] = setprots
   }
-  venn.diagram(x=setlist, filename=sprintf("venn_%s.png", args[2]), imagetype='png')
+  venn.diagram(x=setlist, filename=sprintf("venn_%ss.png", featname), imagetype='png')
 }
 
 
-pdf(sprintf('%s.pdf', args[3]))
+pdf(sprintf('%ss.pdf', featname))
 
-if (args[2] == 'proteins') {
+if (featname == 'protein') {
   plots = list()
   for (i in 1:length(setnames)) local({
     i <- i
@@ -49,7 +49,7 @@ ggplot(proteins, aes(Set, MS1.precursor.area)) +
   
 
 ggplot(na.omit(proteins), aes(Set)) +
-  geom_bar(aes(fill=Set)) + ylab(sprintf('nr of %s', args[2]))
+  geom_bar(aes(fill=Set)) + ylab(sprintf('nr of %ss', featname))
 
 max_rm = function(vec) {
   val = max(vec, na.rm=T)

@@ -24,51 +24,63 @@
 	    #end if
 
 	    #if $peptides
-            &&
-	    python $__tool_directory__/rebuild_set_table.py -t '$peptides' -o qcpeptides.txt -i 1 6 -s $setnames
-	    -f 
-	    #for $field in $fieldnames
-	    '$field'
-	    #end for
-            &&
-	    Rscript $__tool_directory__/qcproteins.R $__tool_directory__/multiplot.R qcpeptides.txt peptides $isobaric $setnames
-            #silent $pdfs.extend(['peptides.pdf', 'venn_peptides.png'])
+                &&
+	        python $__tool_directory__/rebuild_set_table.py -t '$peptides' -o qcpeptides.txt -i 1 6 -s $setnames
+	        -f 
+	        #for $field in $fieldnames
+	            '$field'
+	        #end for
+                &&
+	        Rscript $__tool_directory__/qcproteins.R $__tool_directory__/multiplot.R qcpeptides.txt peptides $isobaric $setnames
+                #silent $pdfs.append('peptides.pdf')
+	        #if 7 > len($setnames) > 1
+                    #silent $pdfs.append('venn_peptides.png')
+		#end if
 	    #end if
 
 	    #if $proteins
-            &&
-	    python $__tool_directory__/rebuild_set_table.py -t '$proteins' -o qcproteins.txt -i 1 5 -s $setnames
-	    -f 
-	    #for $field in $fieldnames
-	    '$field'
-	    #end for
-            &&
-	    Rscript $__tool_directory__/qcproteins.R $__tool_directory__/multiplot.R qcproteins.txt proteins $isobaric $setnames
-            #silent $pdfs.extend(['proteins.pdf', 'venn_proteins.png'])
+                &&
+	        python $__tool_directory__/rebuild_set_table.py -t '$proteins' -o qcproteins.txt -i 1 5 -s $setnames
+	        -f 
+	        #for $field in $fieldnames
+	            '$field'
+	        #end for
+                &&
+	        Rscript $__tool_directory__/qcproteins.R $__tool_directory__/multiplot.R qcproteins.txt proteins $isobaric $setnames
+                #silent $pdfs.append('proteins.pdf')
+	        #if 7 > len($setnames) > 1
+                    #silent $pdfs.append('venn_proteins.png')
+		#end if
 	    #end if
 	    
 	    #if $genes 
-            &&
-	    python $__tool_directory__/rebuild_set_table.py -t '$genes' -o qcgenes.txt -i 1 -s $setnames
-	    -f 
-	    #for $field in $fieldnames
-	    '$field'
-	    #end for
-            &&
-	    Rscript $__tool_directory__/qcproteins.R $__tool_directory__/multiplot.R qcgenes.txt genes $isobaric $setnames
-            #silent $pdfs.extend(['genes.pdf', 'venn_genes.png'])
+                &&
+	        python $__tool_directory__/rebuild_set_table.py -t '$genes' -o qcgenes.txt -i 1 -s $setnames
+	        -f 
+	        #for $field in $fieldnames
+	            '$field'
+	        #end for
+                &&
+	        Rscript $__tool_directory__/qcproteins.R $__tool_directory__/multiplot.R qcgenes.txt genes $isobaric $setnames
+                #silent $pdfs.append('genes.pdf')
+	        #if 7 > len($setnames) > 1
+                    #silent $pdfs.append('venn_genes.png')
+		#end if
 	    #end if
 
-	    #if $symbols 
-            &&
-	    python $__tool_directory__/rebuild_set_table.py -t '$symbols' -o qcsymbols.txt -i 1 -s $setnames
-	    -f 
-	    #for $field in $fieldnames
-	    '$field'
-	    #end for
-            &&
-	    Rscript $__tool_directory__/qcproteins.R $__tool_directory__/multiplot.R qcsymbols.txt symbols $isobaric $setnames
-            #silent $pdfs.extend(['symbols.pdf', 'venn_symbols.png'])
+	        #if $symbols 
+                &&
+	        python $__tool_directory__/rebuild_set_table.py -t '$symbols' -o qcsymbols.txt -i 1 -s $setnames
+	        -f 
+	        #for $field in $fieldnames
+	            '$field'
+	        #end for
+                &&
+	        Rscript $__tool_directory__/qcproteins.R $__tool_directory__/multiplot.R qcsymbols.txt symbols $isobaric $setnames
+                #silent $pdfs.append('symbols.pdf')
+	        #if 7 > len($setnames) > 1
+                    #silent $pdfs.append('venn_symbols.png')
+		#end if
 	    #end if
 
             &&

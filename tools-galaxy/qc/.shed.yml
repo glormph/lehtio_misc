@@ -1,8 +1,0 @@
-owner: jorritb
-name: msstitch_qc
-categories:
-- Proteomics
-description: MSStitch QC
-long_description: |
-  QC for output of msstitch
-type: unrestricted

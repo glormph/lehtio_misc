@@ -1,0 +1,36 @@
+<tool id="package_collection" name="Package dataset" version="0.1">
+    <description>for downloading of multifile data</description>
+    <command>
+        #for $key in $collection.keys()
+        ln -s $collection[$key] "$key";
+        #end for
+        #if str($method) == "tar"
+        tar chvfz packaged_coll.archive
+        #elif str($method) == "zip"
+        zip -j packaged_coll.archive
+        #end if
+        #for $key in $collection.keys()
+        "$key"
+        #end for
+        ; mv packaged_coll.archive $output
+    </command>
+    <inputs>
+        <param name="collection" type="data_collection" label="Collection to package" />
+        <param name="method" type="select" label="Packaging method">
+            <option value="tar">tar with gz compression</option>
+            <option value="zip">zip</option>
+        </param>
+    </inputs>
+    <outputs>
+        <data name="output" format="tar.gz">
+        <change_format>
+            <when input="method" value="zip" format="zip" />
+        </change_format>
+        </data>
+    </outputs>
+    <stdio>
+        <exit_code range="1:" level="fatal" description="Error occurred
+        tarring/zipping"/>
+    </stdio>
+</tool>
+

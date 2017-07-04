@@ -1,0 +1,47 @@
+<tool id="locallink" name="Import from local server" version="0.1">
+  <description>to Galaxy server</description>
+  <command>
+    #if $transfertype == 'link'
+        ln -fs $folder/$filename
+    #elif $transfertype == 'copy'
+        cp $folder/$filename
+    #end if
+    #if $dtype == 'mzml'
+      '$output_mzml'
+    #elif $dtype == 'fasta'
+      '$output_fasta'
+    #elif $dtype == 'tabular'
+      '$output_tabular'
+    #end if
+  </command>
+  <inputs>
+    <param name="folder" size="100" type="text" label="Folder as relative path on storage share" />
+    <param name="filename" size="100" type="text" label="Input file name" />
+    <param name="dtype" type="select" label="datatype">
+      <option value="mzml">mzML</option>
+      <option value="fasta">FASTA</option>
+      <option value="tabular">Tabular</option>
+    </param>
+    <param name="transfertype" type="select" label="Transfer method">
+      <option value="link">Softlink</option>
+      <option value="copy">Copy</option>
+    </param>
+  </inputs>
+  <outputs>
+    <data format="mzml" name="output_mzml" label="${filename}">
+      <filter>dtype == "mzml"</filter>
+    </data>
+    <data format="fasta" name="output_fasta" label="${filename}">
+      <filter>dtype == "fasta"</filter>
+    </data>
+    <data format="tabular" name="output_tabular" label="${filename}">
+      <filter>dtype == "tabular"</filter>
+    </data>
+  </outputs>
+  <help>
+	  A local server should be mounted on the galaxy system so we can import files
+	  by softlinking into the Galaxy file database
+	  Server must be mounted on /mnt/storage
+  </help>
+
+</tool>

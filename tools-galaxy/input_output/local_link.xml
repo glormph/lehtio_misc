@@ -41,7 +41,8 @@
   <help>
 	  A local server should be mounted on the galaxy system so we can import files
 	  by softlinking into the Galaxy file database
-	  Server must be mounted on /mnt/storage
+	  Specify full path of folder, file as seen by Galaxy system. Filename
+	  needs to be specified separately to become name of file in Galaxy.
   </help>
 
 </tool>

@@ -22,7 +22,7 @@
         </param>
     </inputs>
     <outputs>
-        <data name="output" format="tar.gz">
+        <data name="output" format="tar">
         <change_format>
             <when input="method" value="zip" format="zip" />
         </change_format>

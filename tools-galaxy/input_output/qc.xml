@@ -1,4 +1,4 @@
-<tool id="msstitch_qc" name="msstitch QC" version="1.0">
+<tool id="msstitch_qc" name="msstitch QC" version="0.12">
     <description>after search</description>
     <requirements>
         <requirement type="package" version="3.6">python</requirement>
@@ -33,7 +33,7 @@
                 &&
 	        Rscript $__tool_directory__/qcproteins.R $__tool_directory__/multiplot.R qcpeptides.txt peptides $isobaric $setnames
                 #silent $pdfs.append('peptides.pdf')
-	        #if 7 > len($setnames) > 1
+	        #if 6 > len($setnames.split(' ')) > 1
                     #silent $pdfs.append('venn_peptides.png')
 		#end if
 	    #end if
@@ -48,7 +48,7 @@
                 &&
 	        Rscript $__tool_directory__/qcproteins.R $__tool_directory__/multiplot.R qcproteins.txt proteins $isobaric $setnames
                 #silent $pdfs.append('proteins.pdf')
-	        #if 7 > len($setnames) > 1
+	        #if 6 > len($setnames.split(' ')) > 1
                     #silent $pdfs.append('venn_proteins.png')
 		#end if
 	    #end if
@@ -63,7 +63,7 @@
                 &&
 	        Rscript $__tool_directory__/qcproteins.R $__tool_directory__/multiplot.R qcgenes.txt genes $isobaric $setnames
                 #silent $pdfs.append('genes.pdf')
-	        #if 7 > len($setnames) > 1
+	        #if 6 > len($setnames.split(' ')) > 1
                     #silent $pdfs.append('venn_genes.png')
 		#end if
 	    #end if
@@ -78,7 +78,7 @@
                 &&
 	        Rscript $__tool_directory__/qcproteins.R $__tool_directory__/multiplot.R qcsymbols.txt symbols $isobaric $setnames
                 #silent $pdfs.append('symbols.pdf')
-	        #if 7 > len($setnames) > 1
+	        #if 6 > len($setnames.split(' ')) > 1
                     #silent $pdfs.append('venn_symbols.png')
 		#end if
 	    #end if

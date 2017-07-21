@@ -1,0 +1,39 @@
+<tool id="write_element_ids" name="Write element identifiers" version="0.1">
+  <description>of collection list to text file</description>
+  <command>
+	  <![CDATA[
+          true
+	  #for $element_identifier in $input.keys()
+	        &&
+	  	echo $element_identifier >> $output
+	  #end for 
+	  ]]>
+  </command>
+  <inputs>
+    <param name="input" type="data_collection" collection_type="list" label="Input collection" />
+  </inputs>
+  <outputs>
+    <data format="tabular" name="output" />
+  </outputs>
+
+  <tests>
+	  <test>
+		  <param name="input">
+			  <collection type="list">
+				  <element name="first_element" value="line.txt" />
+				  <element name="second_element" value="line.txt" />
+			  </collection>
+		  </param>
+		  <output name="output">
+			  <assert_contents>
+				  <has_line line="first_element" />
+				  <has_line line="second_element" />
+			  </assert_contents>
+		  </output>
+	  </test>
+  </tests>
+  <help>
+	  Writes collection element identifiers to a text file
+  </help>
+
+</tool>

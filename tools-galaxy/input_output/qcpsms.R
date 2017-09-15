@@ -89,7 +89,7 @@ multiplot(plotlist=plots, cols=2)
 
 # missed cleavages
 psms_wide = dcast(psms[,c("Plate_ID", "missed_cleavage")], Plate_ID~missed_cleavage)
-sum_psms = apply(psms_wide[,c(2:length(psms_wide))], 1, sum)
+sum_psms = apply(as.data.frame(psms_wide[,c(2:length(psms_wide))]), 1, sum)
 for (mcno in names(psms_wide)[c(2:length(psms_wide))]) {
   psms_wide[,mcno] = psms_wide[,mcno]/sum_psms * 100
 }

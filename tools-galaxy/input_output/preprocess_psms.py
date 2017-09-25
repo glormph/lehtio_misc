@@ -94,8 +94,9 @@ def get_plate_id(bioset, fn, patterns):
     for pattern in patterns:
         if pattern in fn:
             return '{}_{}'.format(bioset, pattern)
-    raise RuntimeError('Could not match patterns {} to filename {} to detect '
-                       'name of plate'.format(patterns, fn))
+    print('Could not match patterns {} to filename {} to detect '
+          'name of plate, substitute with NA'.format(patterns, fn))
+    return '{}_{}'.format(bioset, 'NA')
 
 
 def count_missed_cleavage(full_pepseq, count=0):

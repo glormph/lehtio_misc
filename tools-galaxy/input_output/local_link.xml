@@ -1,4 +1,4 @@
-<tool id="locallink" name="Import from local server" version="0.1">
+<tool id="locallink" name="Import from local server" version="0.2">
   <description>to Galaxy server</description>
   <command>
     #if $transfertype == 'link'
@@ -12,6 +12,8 @@
       '$output_fasta'
     #elif $dtype == 'tabular'
       '$output_tabular'
+    #elif $dtype == 'sqlite'
+      '$output_sqlite'
     #end if
   </command>
   <inputs>
@@ -21,6 +23,7 @@
       <option value="mzml">mzML</option>
       <option value="fasta">FASTA</option>
       <option value="tabular">Tabular</option>
+      <option value="sqlite">SQLite</option>
     </param>
     <param name="transfertype" type="select" label="Transfer method">
       <option value="link">Softlink</option>
@@ -36,6 +39,9 @@
     </data>
     <data format="tabular" name="output_tabular" label="${filename}">
       <filter>dtype == "tabular"</filter>
+    </data>
+    <data format="sqlite" name="output_sqlite" label="${filename}">
+      <filter>dtype == "sqlite"</filter>
     </data>
   </outputs>
   <help>

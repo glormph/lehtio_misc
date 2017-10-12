@@ -7,7 +7,7 @@ library(VennDiagram)
 #args = c('test-data/rebuilt_proteins.txt', 'proteins', 'true')
 
 args = commandArgs(trailingOnly = T)
-isobaric_labeled = !is.na(args[4])
+isobaric_labeled = args[4] == 'true'
 featname = substring(args[3], 1, nchar(args[3])-1) # protein, peptide, gene, etc
 proteins = read.table(args[2], header=T, sep='\t')
 multiplot_fn = args[1]
@@ -26,30 +26,37 @@ if (length(wideproteins) < 7) {
 }
 
 
-pdf(sprintf('%ss.pdf', featname))
+if (isobaric_labeled) {
+  pagelength = length(setnames) * 1.5
+} else {
+  pagelength = length(setnames) / 8
+}
+print(sprintf('Pagelength %s', pagelength))
+pdf(sprintf('%ss.pdf', featname), height=pagelength)
 
 if (featname == 'protein') {
-  plots = list()
-  for (i in 1:length(setnames)) local({
-    i <- i
-    setmedian = median(subset(proteins, Set=setnames[i])$Coverage)
-    maxcov = 
-    plots[[i]] <<- ggplot(subset(proteins, Set=setnames[i]), aes(x=Coverage)) +
+    setmedian = median(subset(proteins, Set==setnames[1])$Coverage)
+    ggplot(subset(proteins, Set==setnames[1]), aes(x=Coverage)) +
       geom_histogram(position='identity', alpha=0.4, bins=50) +
-      ylab(sprintf('%s count', featname)) + ggtitle(setnames[i]) +
+      ylab(sprintf('%s count', featname)) + 
       annotation_custom(grob=textGrob(label=sprintf('Median: %.3f', setmedian)))
-    })
-  multiplot(plotlist=plots, cols=2)
-    
 }
 
+ticks = element_line(size=10/length(setnames))
+if (length(setnames) > 50) {
+  font = element_text(size=1000/length(setnames))
+} else {
+  font = element_text(size=100/length(setnames))
+}
 ggplot(proteins, aes(Set, MS1.precursor.area)) +
-  geom_boxplot(aes(fill=Set)) + # geom_jitter(alpha=0.2) + 
-  scale_y_log10() + ylab(sprintf('Precursor area per %s', featname))
+  geom_boxplot() + # geom_jitter(alpha=0.2) + 
+  scale_y_log10() + ylab(sprintf('Precursor area per %s', featname)) + coord_flip() +
+  theme(text=font, axis.ticks=ticks, panel.grid=element_line(size=0))
   
 
 ggplot(na.omit(proteins), aes(Set)) +
-  geom_bar(aes(fill=Set)) + ylab(sprintf('nr of %ss', featname))
+  geom_bar() + ylab(sprintf('nr of %ss', featname)) + coord_flip() +
+  theme(text=font, panel.grid=element_line(size=0), axis.ticks=ticks)
 
 max_rm = function(vec) {
   val = max(vec, na.rm=T)

@@ -1,4 +1,4 @@
-<tool id="msstitch_qc" name="msstitch QC" version="0.14">
+<tool id="msstitch_qc" name="msstitch QC" version="0.16">
     <description>after search</description>
     <requirements>
         <requirement type="package" version="3.6">python</requirement>

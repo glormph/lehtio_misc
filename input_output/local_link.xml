@@ -1,4 +1,4 @@
-<tool id="locallink" name="Import from local server" version="0.2">
+<tool id="locallink" name="Import from local server" version="0.3">
   <description>to Galaxy server</description>
   <command>
     #if $transfertype == 'link'
@@ -14,6 +14,8 @@
       '$output_tabular'
     #elif $dtype == 'sqlite'
       '$output_sqlite'
+    #elif $dtype == 'tar'
+      '$output_tar'
     #end if
   </command>
   <inputs>
@@ -24,6 +26,7 @@
       <option value="fasta">FASTA</option>
       <option value="tabular">Tabular</option>
       <option value="sqlite">SQLite</option>
+      <option value="tar">Compressed archive (tar)</option>
     </param>
     <param name="transfertype" type="select" label="Transfer method">
       <option value="link">Softlink</option>
@@ -42,6 +45,9 @@
     </data>
     <data format="sqlite" name="output_sqlite" label="${filename}">
       <filter>dtype == "sqlite"</filter>
+    </data>
+    <data format="tar" name="output_tar" label="${filename}">
+      <filter>dtype == "tar"</filter>
     </data>
   </outputs>
   <help>

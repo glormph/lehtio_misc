@@ -1,0 +1,23 @@
+<tool id="unpackage_collection" name="Unpackage dataset" version="0.2">
+    <description>for uploading of multifile data</description>
+    <command detect_errors="exit_code">
+        #if str($method) == "tar"
+        tar xfvz $package
+        #elif str($method) == "zip"
+        unzip $packaged_coll
+        #end if
+    </command>
+    <inputs>
+        <param name="package" type="data" label="Packaged data" />
+        <param name="method" type="select" label="Unpackaging method">
+            <option value="tar">tar with gz compression</option>
+            <option value="zip">zip</option>
+        </param>
+    </inputs>
+    <outputs>
+        <collection name="unpackaged_data" type="list" label="Unpackaged data">
+            <filter>filetype == "mzid"</filter>
+            <discover_datasets pattern="__designation_and_ext__" />
+        </collection>
+    </outputs>
+</tool>
